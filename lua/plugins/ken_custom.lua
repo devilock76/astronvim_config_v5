@@ -132,10 +132,52 @@ return {
   },
   {
     "olimorris/codecompanion.nvim",
-    opts = {},
+    opts = function()
+      -- Check if the OpenAI API Key is available in the environment
+      local api_key = vim.env.OPENAI_API_KEY
+
+      return {
+        -- Conditionally set the default adapter to OpenAI if API key exists
+        strategies = api_key and {
+          chat = {
+            adapter = {
+              name = "openai",
+              model = "gpt-3.5-turbo",
+            },
+          },
+          inline = {
+            adapter = {
+              name = "openai",
+              model = "gpt-3.5-turbo",
+            },
+          },
+          cmd = {
+            adapter = {
+              name = "openai",
+              model = "gpt-3.5-turbo",
+            },
+          },
+        } or {},  -- Otherwise, don't set a default strategy
+
+        -- Configure adapters
+        -- adapters = {
+        --   openai = function()
+        --     if api_key then
+        --       return {
+        --         model = 'gpt-3.5-turbo',  -- or 'gpt-3.5-turbo' based on your preference
+        --         api_key = api_key,  -- Pass the API key to the adapter
+        --         temperature = 0.7,  -- Optional: Adjust the temperature as needed
+        --       }
+        --     else
+        --       return nil  -- Don't use OpenAI if no API key found
+        --     end
+        --   end,
+        -- },
+      }
+    end,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
-  },
+  }
 }
